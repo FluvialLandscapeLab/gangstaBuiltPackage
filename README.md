@@ -1,2 +1,2 @@
 # gangstaBuiltPackage
-A installable R package for creating GANGSTA-derived models
+The `gangstaBuiltPackage` is an installable R package for creating GANGSTA-derived models.  
