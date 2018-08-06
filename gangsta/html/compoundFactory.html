@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create 'gangsta' objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for compoundFactory {gangsta}"><tr><td>compoundFactory {gangsta}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create <code>gangsta</code> objects</h2>
+
+<h3>Description</h3>
+
+<p><code>compoundFactory</code> and <code>processFactory</code> are the primary functions
+used to create gangsta objects.  <code>compoundFactory</code> is a function that
+creates a <code>compound</code> object and all associated <code>pool</code> objects for
+use by the <code>gangsta</code> package. <code>processFactory</code> creates a
+<code>process</code> object and all associated <code>transfer</code> objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+compoundFactory(compoundName, molarRatios, initialMolecules,
+  respirationRate = NA, infiniteCompound = F)
+
+processFactory(gangstaObjects, processName, energyTerm, fromCompoundNames,
+  toCompoundNames, molarTerms, transferOptions = NULL, organismName = "",
+  limitToInitMolecules = T)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>compoundName</code></td>
+<td>
+<p>A character vector of <code>length = 1</code> containing the
+name of the
+<code>compound</code> to be created.</p>
+</td></tr>
+<tr valign="top"><td><code>molarRatios</code></td>
+<td>
+<p>A named numeric vector.  Vector names are the names of the
+chemical elements (think 'periodic table in chemistry') that are in the
+<code>compound</code> and that are to be tracked by <code>gangsta</code>.  Values in
+the vector are the ratios for the number of atoms of each element in the
+<code>compound</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>initialMolecules</code></td>
+<td>
+<p>The number of mols (or umols, etc.) of the compound
+available at the beginning of the simulation.  If the <code>compound</code> is of
+type <code>infiniteCompound</code>, then <code>initialMolecules</code> must be set to 0.</p>
+</td></tr>
+<tr valign="top"><td><code>respirationRate</code></td>
+<td>
+<p>The respiration rate (in units of energy per unit of
+biomass per model timestep); applies to <code>organism</code> objects.  When
+<code>respirationRate</code> is numeric, an <code>organism</code> object is returned.
+When NA, a <code>compound</code> object is returned.  <code>respirationRate</code>
+values must be negative (i.e., energy cost to the organisms).</p>
+</td></tr>
+<tr valign="top"><td><code>infiniteCompound</code></td>
+<td>
+<p>Boolean when set to <code>TRUE</code> tags a
+<code>compound</code> as being unlimited in supply. <code>infiniteCompound</code>s
+represent sources/sinks.  When <code>infiniteCompound</code> is set to <code>TRUE</code>,
+<code>initialMolecules</code> must be set to 0.</p>
+</td></tr>
+<tr valign="top"><td><code>gangstaObjects</code></td>
+<td>
+<p>A list of objects of class <code>gangsta</code> representing
+the <code>organisms</code>, <code>compounds</code>, <code>pools</code>, <code>processes</code>, and
+<code>transfers</code> to be included in the model.  These objects are created
+using <code>compoundFactory</code> and <code>processFactory</code>.
+<code>compoundFactory</code> must be executed before <code>processFactory</code>
+because <code>gangstaObjects</code> for all <code>compounds</code> involved in a
+<code>process</code> must be created before <code>processFactory</code> can create the
+<code>process</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>processName</code></td>
+<td>
+<p>A character vector of the name of the <code>process</code> to be
+created.</p>
+</td></tr>
+<tr valign="top"><td><code>energyTerm</code></td>
+<td>
+<p>The chemical affinity of the processs.  A positive number
+represents a process that yeilds energy, a negative number represents a
+process that consumes energy.  Units are kJ (or J, etc.) of energy per mol
+(or umol, etc.) of the reaction.</p>
+</td></tr>
+<tr valign="top"><td><code>fromCompoundNames</code></td>
+<td>
+<p>Named <code>list</code> where the name of each <code>list</code>
+member is the a chemical element derived from the compound.  For instance,
+to track carbon flux from the oxidation of glucose, the
+<code>fromCompoundNames</code> list might be <code>list(C = "C6H12O6", O = "O2")</code></p>
+</td></tr>
+<tr valign="top"><td><code>toCompoundNames</code></td>
+<td>
+<p>See <code>fromCompoundNames</code>.  To track carbon flux
+from the oxidation of glucose, the <code>toCompoundNames</code> list might be
+<code>list(C = "CO2", O = "Ox")</code> (where Ox is a undifferentiated sink for
+oxygen comprised of H2O and CO2).  The names of <code>toCompoundNames</code> must
+be the same and in the same order as those of <code>fromCompoundNames</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>molarTerms</code></td>
+<td>
+<p>Named list containing the mols (or umols, etc.) of each
+element that are transfered by the <code>process</code>.  The names of
+<code>molarTerms</code> must be the same and in the same order as those of
+<code>fromCompoundNames</code> and <code>toCompoundNames</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>transferOptions</code></td>
+<td>
+<p>When transferOptions is <code>NULL</code>,
+<code>processFactory</code> will create these automatically.
+<code>transferOptions</code> consist of a list of integer or numeric vectors
+containing the indicies of transfers in a process.  This specification is
+appropriate when each <code>from pool</code> has exactly one <code>to
+pool</code>.  However, these must be specified when more than one <code>to pool</code>
+exists for any transfer involved in a process, i.e., indicies are grouped
+when transfers represent optional pathways. For instance, if a process has
+four transfers (fromA -&gt; toA, fromB -&gt; toB1, fromB -&gt; toB2, fromC -&gt; toC),
+the second and third transfers can represent an option.  fromB can go to
+either toB1 or toB2, so long as the sum of the two options is in
+stoichiometric balance with the A and C tranfers.  To represent such an
+option, the transferOption list would be <code>list(1, 2:3, 4)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>organismName</code></td>
+<td>
+<p>Name of the organism carrying out the <code>process</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>gangsta</code> uses several classes of S3 objects to represent
+biogeochemical systems.  All S3 objects in <code>gangsta</code> are built atop
+named lists with the class arribute set.  The list's names are used as
+attribute names and the values in the lists are the attribute values.
+</p>
+<p><code>compound</code> objects represent chemical species (e.g., SO4 and HS) that
+generally contain one or more chemical elements; the mols (or umols, etc.) of
+each element of interest (i.e., tracked element) within a <code>compound</code> are
+tracked using a <code>pool</code>.  Each <code>pool</code> records the mols of a tracked
+element in the <code>compound</code>.
+</p>
+<p>The <code>molarRatios</code> describe the chemical composition of the
+tracked elements contained in compounds. For example, the <code>molarRatios</code>
+for water could be represented as <code>c(H = 2, O = 1)</code> because a molecule
+of water is composed of two hydrogen atoms and one oxygen atom.
+</p>
+<p>Not all elements in a <code>compound</code> must be tracked.  The model developer
+only creates <code>pool</code>s for the elements of interest.  For instance, when
+creating a <code>compound</code> for SO4, passing <code>c(S=1)</code> to
+<code>compoundFactory</code> as the <code>molarRatios</code> vector would create only a
+<code>pool</code> for sulfur, not for oxygen.  Two <code>pool</code>s, one for sulfur and
+one for oxygen, would be created by passing <code>c(S=1, O=4)</code>.
+</p>
+<p><code>compound</code> objects have attributes named <code>name</code>,
+<code>initialMolecules</code> which are the starting values for the model run, and
+<code>infiniteCompound</code> which is a Boolean indicating whether the compound is
+a source/sink.
+</p>
+<p><code>compound</code> objects are also used to represent organisms (which
+assimilate elements as they grow) in <code>gangsta</code>-derived models.
+<code>organism</code> objects inherit from <code>compound</code> and contain an extra
+attribute called <code>respirationRate</code> For <code>organism</code>s, the
+<code>respirationRate</code> is energy (J, KJ, etc.) per mol (or umol, etc.) of
+<code>compound</code> per timestep.
+</p>
+<p><code>pool</code> objects have attributes called <code>name</code>, <code>elementName</code> which is
+the chemical element stored in the <code>pool</code>, <code>compoundName</code> which
+indicates the compound with which the pool is associated, and
+<code>molarRatio</code> which describes the ratio of atoms in the <code>pool</code> per
+unit molecule, i.e., <code>compound</code>.
+</p>
+<p><code>process</code> objects have attributes called <code>name</code>, <code>energyTerm</code> which
+is equal to the energy generated or consumed by the <code>process</code>,
+<code>organismName</code> which is the name of the <code>organism</code> carrying out the
+<code>process</code>, and <code>transferOptions</code> which are indices for the
+<code>transfer</code>s associated with each <code>process</code>.  Each <code>process</code> with
+nonzero <code>energyTerm</code> is of class &quot;metabolic.&quot;
+</p>
+<p><code>transfer</code> objects have attributes called <code>name</code>, <code>from</code> which is the
+<code>pool</code> from which atoms are being transfered, <code>to</code> which is the
+<code>pool</code> to which atoms are being transfered, <code>molarTerm</code> which
+enforces the stoichiometry of the <code>process</code>, <code>molarAffinity</code> which
+is equal to the <code>energyTerm</code> of the <code>process</code> divided by the
+<code>molarTerm</code> of the <code>transfer</code>, <code>processName</code> which is the name
+of the <code>process</code> that the <code>transfer</code> is associated with, and
+<code>limitToInitMolecules</code> which is a Boolean that inherits from <code>process</code>.
+</p>
+<p><code>gangsta</code>-derived models can operate using any unit of atomic count unit
+(mols, umols, etc.), unit of energy (Joules, KJ, etc.) over any time unit
+defined by the user.  However, it is critical that all units for values
+passed to the model be consistent.  For example, the units of
+<code>respirationRate</code> and the units of atomic count used by <code>pool</code>
+objects must be consistent with the units of all other values passed to
+functions in the <code>gangsta</code> package.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>compoundFactory</code> returns a list of <code>compound</code> and <code>pool</code>
+objects. <code>processFactory</code> return a list of <code>process</code> and
+<code>transfer</code> objects.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>gangsta</em> version 1.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

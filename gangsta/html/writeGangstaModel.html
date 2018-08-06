@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: 'gangsta' Utils</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for writeGangstaModel {gangsta}"><tr><td>writeGangstaModel {gangsta}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2><code>gangsta</code> Utils</h2>
+
+<h3>Description</h3>
+
+<p><code>writeGangstaModel</code> instantiates a <code>gangsta</code>-derived model into
+computer code.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+writeGangstaModel(gangstaObjects, file = file.choose())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>gangstaObjects</code></td>
+<td>
+<p>A list of objects of class <code>gangsta</code> created with
+functions <code>compoundFactory</code> and <code>processFactory</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>The default argument for <code>file</code> is <code>file.choose()</code>;
+using the default will enable the end user to overwrite an existing file or
+create a new file if one does not already exist.  However, the end user can
+also specify a file on their local drive. In either case, files generated
+using <code>writeGangstaModel</code> should be saved with an &quot;.lp&quot; extension for
+compatability with lpSolve.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p><code>writeGangstaModel</code> returns a file with the simulation model
+code, formatted for use in lpSolve (http://lpsolve.sourceforge.net/5.5/).
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>gangsta</em> version 1.0 <a href="00Index.html">Index</a>]</div>
+</body></html>
