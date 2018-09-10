@@ -13,4 +13,4 @@ Imports: plyr
 Suggests: lpSolveAPI
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
-Built: R 3.5.0; ; 2018-08-06 19:51:57 UTC; windows
+Built: R 3.5.0; ; 2018-09-10 19:35:25 UTC; windows
